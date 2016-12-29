@@ -1,4 +1,25 @@
 {
-	"suluPackage" : "I' am the first.",
-	"name" : "sulu-application-core"
+  "suluPackage": "I' am the first.",
+  "name": "sulu-application-core",
+  "description": "SULU Application Core Modules",
+  "version": "0.2.0",
+  "main": "app.js",
+  "scripts": {
+  	"bump": "npm version patch && git push && git push --tags && npm publish",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sulu-one/sulu-application-core.git"
+  },
+  "keywords": [
+    "sulu",
+    "filemanager"
+  ],
+  "author": "s-a",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sulu-one/sulu-application-core/issues"
+  },
+  "homepage": "https://github.com/sulu-one/sulu-application-core#readme"
 }
