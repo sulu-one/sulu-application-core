@@ -21,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/sulu-one/sulu-application-core/issues"
   },
-  "homepage": "https://github.com/sulu-one/sulu-application-core#readme"
+  "homepage": "https://github.com/sulu-one/sulu-application-core#readme",
+  "dependencies": {
+    "dialogs": "^1.1.17",
+    "pretty-error": "^2.0.2",
+    "time-controller": "^1.0.3"
+  }
 }
