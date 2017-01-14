@@ -76,8 +76,8 @@ ApplicationController.prototype.requireAll = function() {
 	var result = false;
 	var meta;
 	try{
-		window.key = require("keymaster");
-		this.packageController = require("package.js");
+		window.key = require("sulu-application-core/node_modules/keymaster");
+		this.packageController = require("sulu-application-core/node_modules/package.js");
 		var folders = [path.join(__dirname, "..")];
 		 
 		this.packageController.autoload({
@@ -89,7 +89,8 @@ ApplicationController.prototype.requireAll = function() {
 			},
 			packageContstructorSettings: {app : this}
 		});
-
+debugger;
+		// require('app-module-path').addPath(__dirname + '/app');
 		result = true;
 	} catch (e) {
 		e.suluPackage = meta;
