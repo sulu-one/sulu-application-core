@@ -38,7 +38,7 @@ ApplicationNotifier.prototype.msg = function(msg) {
 ApplicationNotifier.prototype.error = function(err) {
 	var fn = path.join(this.GUI.app.config.dataFolder, "error.log");
 	const {dialog} = require('electron').remote; 
-	var PrettyError = require('sulu-application-core/pretty-error');
+	var PrettyError = require('sulu-application-core/node_modules/pretty-error');
 	var pe = new PrettyError();
 	pe.withoutColors();
 	pe.skipNodeFiles(); // this will skip events.js and http.js and similar core node files

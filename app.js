@@ -23,7 +23,7 @@ try{
  
 	var ApplicationController = require("sulu-application-core/app.controller.js");
 	var applicationController = new ApplicationController({nodeModulesFolder: __dirname });
-	window.Clusterize = require("sulu-application-core/node_modules/clusterize.js");
+	window.Clusterize = require("clusterize.js");
 
 	window.onload = function appLoad() {
 		if (applicationController.initialize()){ 
@@ -35,7 +35,7 @@ try{
 	require('electron').remote.getCurrentWindow().setMenu(null);   
 } catch(e){
 	const {dialog} = require('electron').remote; 
-	var PrettyError = require('sulu-application-core/node_modules/pretty-error');
+	var PrettyError = require('pretty-error');
 	var pe = new PrettyError();
 	pe.withoutColors();
 	pe.skipNodeFiles(); // this will skip events.js and http.js and similar core node files
