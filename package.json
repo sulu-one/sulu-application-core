@@ -2,7 +2,7 @@
   "suluPackage": "I' am the first.",
   "name": "sulu-application-core",
   "description": "SULU Application Core Modules",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "main": "app.js",
   "scripts": {
     "bump": "npm version patch && git push && git push --tags && npm publish",
