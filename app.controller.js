@@ -3,6 +3,7 @@
  * @license MIT
  * @author Stephan Ahlf
 */ 
+var fs = require("fs");
 var path = require("path");
 var events = require("events");
 var ApplicationNotifier = require("./app.notifier.js");
@@ -27,7 +28,7 @@ var ApplicationController = function(config) {
 	this.msg = applicationNotifier.msg;
 	this.dlg = applicationNotifier.dlg;
 	this.events = new events.EventEmitter();
-
+	this.registeredHotKeys = [];
 	return this;
 };
 
@@ -51,23 +52,81 @@ ApplicationController.prototype.getFunctionName = function(fn) {
 }
 
 /**
-* Registers a shortcut (https://github.com/madrobby/keymaster#supported-keys).
+* [Obsolete] Registers a shortcut (https://github.com/madrobby/keymaster#supported-keys).
 * @param {String} key - A comma seperated list of short cut keys.
 * @param {function} fn - A named JavaScript function.
 */
 ApplicationController.prototype.registerHotKey = function(key, fn) {
-	var n  = this.getFunctionName(fn);
-	
-	console.info("press \"" + key + "\" to \"" + n + "\"");
+	console.warn("registerHotKey(\"" + key + "\", fn) is obsolete - Create a \"suluPackage\" object with \"hotkeys\" section in your package.json file instead.");
+	var functionName  = this.getFunctionName(fn);
+	if (!this.registeredHotKeys){
+		this.registeredHotKeys = [];
+	} 
+ 
+	this.registeredHotKeys.push({
+		name: functionName,
+		f : fn,
+		key: key
+	});
+	console.warn("press \"" + key + "\" to \"" + functionName + "\"");
 	window.key(key, "global", fn.bind(this));
 	window.key.setScope("global");
-};
-/*
-ApplicationController.prototype.fileSystemViews = function() {
-	console.error("obsolete!", "use app.GUI.fileSystemViews", "instead");
-};
-*/
+}; 
 
+ApplicationController.prototype.registerHotkey = function(hotkey, f) {
+	if (!this.registeredHotKeys){
+		this.registeredHotKeys = [];
+	} 
+ 
+	this.registeredHotKeys.push({
+		name: hotkey.function,
+		f : f,
+		key: hotkey.key
+	});
+	console.debug("press \"" + hotkey.key + "\" to \"" + hotkey.function + "\"");
+	window.key(hotkey.key, "global", f.bind(this));
+	window.key.setScope("global");
+};  
+
+ApplicationController.prototype.registerAsLoadedModule = function(fn) {
+	var p = path.join(__dirname, "package.json");
+	var f = JSON.parse( fs.readFileSync(p).toString());
+	this.packageController.loadedPlugins.push({
+		dir: __dirname,
+		instance : this,
+		meta: f
+	});
+}
+
+ApplicationController.prototype.isFunction = function(f) {
+	return typeof(f === "function");
+}
+
+ApplicationController.prototype.isCommandFunction = function(package, parentProperty, hotkey) {
+	return (package.instance.hasOwnProperty(parentProperty) && this.isFunction(package.instance[parentProperty][hotkey.function]));
+}
+
+ApplicationController.prototype.registerHotKeys = function() {
+
+	for (var i = 0; i < this.packageController.loadedPlugins.length; i++) {
+		var package = this.packageController.loadedPlugins[i];
+		if (package.meta.suluPackage.hotkeys){
+			for (var h = 0; h < package.meta.suluPackage.hotkeys.length; h++) {
+				var hotkey = package.meta.suluPackage.hotkeys[h];
+				var f = null;
+				if (this.isCommandFunction(package, "command", hotkey)){
+					f = package.instance.command[hotkey.function];
+				}
+				if (this.isCommandFunction(package, "GUI", hotkey)){
+					f = package.instance.GUI[hotkey.function];
+				}
+				if (f !== null){
+					this.registerHotkey(hotkey, f);
+				}
+			}
+		}
+	}
+}
 
 /**
 * Auto scans and loads installed packages.
@@ -79,18 +138,25 @@ ApplicationController.prototype.requireAll = function() {
 		window.key = require("keymaster");
 		this.packageController = require("package.js");
 		var folders = [path.join(__dirname, "..")];
-		 
+		
 		this.packageController.autoload({
-			debug: true,
+			debug: false,
 			directories: folders,
 			identify: function() {
-				meta = this.meta;
-				return (this.meta.suluPackage === true);
+				var identified = (
+					this.meta.suluPackage === true || typeof(this.meta.suluPackage) === "object"
+				);
+				if (identified){
+					meta = this.meta; 
+					identified = (meta.suluPackage.init !== false);
+				}
+				return identified;
 			},
 			packageContstructorSettings: {app : this}
 		});
 
-		// require('app-module-path').addPath(__dirname + '/app');
+		this.registerAsLoadedModule();
+		this.registerHotKeys();
 		result = true;
 	} catch (e) {
 		e.suluPackage = meta;

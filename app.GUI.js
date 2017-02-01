@@ -8,14 +8,23 @@ var Dialogs = require("dialogs");
 var TimeController = require("time-controller");
 
 
+var Command = function() {
+	return this;
+}
 
+Command.prototype.openCommandPallete = function openCommandPallete() {
+}
 /**
  * @class GUI
  * @param {ApplicationController} app - the ApplicationController
 */
 var GUI = function(app) {
 	var self = this;
+	
+	this.command = new Command();
+
 	this.app = app;
+	/*
 	this.app.registerHotKey("tab", this.toggleActiveFileSystemView);
 	this.app.registerHotKey("down", this.navigateToNextRow);
 	this.app.registerHotKey("up", this.navigateToPreviousRow);
@@ -26,6 +35,7 @@ var GUI = function(app) {
 	this.app.registerHotKey("ctrl+a", this.selectAll);
 	this.app.registerHotKey("ctrl+shift+a", this.invertSelection);
 	this.app.registerHotKey("ctrl+s", this.selectByFileExtension);
+	*/
 
 	window.document.onkeydown = this.onKeyBoardInput.bind(this);
 	this.debouncedKeyBoardInputTimer = new TimeController(this.onFilter, this).debounce(400);
@@ -75,26 +85,33 @@ GUI.prototype.onFilter = function onFilter() {
 
 GUI.prototype.onKeyBoardInput = function onKeyBoardInput(e) { 
 
-	var keycode = e.keyCode;  
-	var $filter = this.activeView().el.find(".filter").find("input");
-    var printable = 
-        (keycode > 47 && keycode < 58)   || // number keys
-        (keycode > 64 && keycode < 91)   || // letter keys
-        (keycode > 95 && keycode < 112)  || // numpad keys
-        (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
-        (keycode > 218 && keycode < 223);   // [\]' (in order)
+	var keycode = e.keyCode; 
+	var view = this.activeView();
+	var result = false;
 
-	if (keycode === 13 || keycode === 27){
-		$filter.val("");
-		this.debouncedKeyBoardInputTimer(); 
+	if (view) {
+		var $filter = this.activeView().el.find(".filter").find("input");
+		var printable = 
+			(keycode > 47 && keycode < 58)   || // number keys
+			(keycode > 64 && keycode < 91)   || // letter keys
+			(keycode > 95 && keycode < 112)  || // numpad keys
+			(keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+			(keycode > 218 && keycode < 223);   // [\]' (in order)
+
+		if (keycode === 13 || keycode === 27){
+			$filter.val("");
+			this.debouncedKeyBoardInputTimer(); 
+		}
+
+		if ((printable && !e.ctrlKey) || $filter.is(":focus")){
+			$filter.focus();
+			this.debouncedKeyBoardInputTimer(); 
+		}
+
+		result = true;
 	}
 
-	if ((printable && !e.ctrlKey) || $filter.is(":focus")){
-		$filter.focus();
-		this.debouncedKeyBoardInputTimer(); 
-	}
-
-	return true;
+	return result;
 
 }; 
 
