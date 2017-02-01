@@ -1,51 +1,51 @@
 {
   "name": "sulu-application-core",
   "description": "SULU Application Core Modules",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "app.js",
   "suluPackage": {
-    "init" : false,
-    "hotkeys" : [
-		{
-			"key" : "tab", 
-			"function" : "toggleActiveFileSystemView"
-		},
-		{
-			"key" : "down", 
-			"function" : "navigateToNextRow"
-		},
-		{
-			"key" : "up", 
-			"function" : "navigateToPreviousRow"
-		},
-		{
-			"key" : "enter", 
-			"function" : "enterActiveRow"
-		},
-		{
-			"key" : "backspace", 
-			"function" : "navigateToParentFolder"
-		},
-		{
-			"key" : "space", 
-			"function" : "selectActiveRow"
-		},
-		{
-			"key" : "esc", 
-			"function" : "unselectAllRows"
-		},
-		{
-			"key" : "ctrl+a", 
-			"function" : "selectAll"
-		},
-		{
-			"key" : "ctrl+shift+a", 
-			"function" : "invertSelection"
-		},
-		{
-			"key" : "ctrl+s", 
-			"function" : "selectByFileExtension"
-		}
+    "init": false,
+    "hotkeys": [
+      {
+        "key": "tab",
+        "function": "toggleActiveFileSystemView"
+      },
+      {
+        "key": "down",
+        "function": "navigateToNextRow"
+      },
+      {
+        "key": "up",
+        "function": "navigateToPreviousRow"
+      },
+      {
+        "key": "enter",
+        "function": "enterActiveRow"
+      },
+      {
+        "key": "backspace",
+        "function": "navigateToParentFolder"
+      },
+      {
+        "key": "space",
+        "function": "selectActiveRow"
+      },
+      {
+        "key": "esc",
+        "function": "unselectAllRows"
+      },
+      {
+        "key": "ctrl+a",
+        "function": "selectAll"
+      },
+      {
+        "key": "ctrl+shift+a",
+        "function": "invertSelection"
+      },
+      {
+        "key": "ctrl+s",
+        "function": "selectByFileExtension"
+      }
     ]
   },
   "scripts": {
